@@ -1,31 +1,94 @@
 import Link from 'next/link';
 
+const columns: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: 'Produkt',
+    links: [
+      { label: 'Kalkulator', href: '/kalkulator' },
+      { label: 'Demo', href: '/demo' },
+      { label: 'Buchung', href: '/booking' },
+      { label: 'Preise', href: '/#pricing' },
+    ],
+  },
+  {
+    heading: 'Rechtliches',
+    links: [
+      { label: 'Impressum', href: '/impressum' },
+      { label: 'AGB', href: '/agb' },
+      { label: 'Datenschutz', href: '/datenschutz' },
+      { label: 'Cookies', href: '/cookies' },
+    ],
+  },
+  {
+    heading: 'Support',
+    links: [
+      { label: 'Kontakt', href: '/kontakt' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Dokumentation', href: '/dokumentation' },
+    ],
+  },
+];
+
 export function Footer() {
   return (
-    <footer className="border-t border-white/5 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-slate-500 sm:flex-row">
-        <div className="flex items-center gap-2">
-          <span className="grid size-7 place-items-center rounded-md bg-[#FFD700] font-mono text-xs font-bold text-[#0F172A]">
-            S
-          </span>
-          <span>
-            <span className="font-semibold text-slate-200">SVD Clean Pro</span>
-            <span className="ml-1 text-slate-500">
-              — © {new Date().getFullYear()} svd-clean.de
-            </span>
-          </span>
+    <footer className="relative bg-navy-975 border-t border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-4">
+          {columns.map((col) => (
+            <div key={col.heading}>
+              <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                {col.heading}
+              </h4>
+              <ul className="mt-4 space-y-2.5">
+                {col.links.map((l) => (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      className="text-sm text-white/65 transition-colors hover:text-white"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          <div>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">
+              Kontakt
+            </h4>
+            <div className="mt-4 text-sm leading-relaxed text-white/65">
+              <div className="font-medium text-white">SVD Clean Pro</div>
+              <div className="mt-1">Augsburg, Deutschland</div>
+              <a
+                href="mailto:info@svd-clean.de"
+                className="mt-2 inline-block text-gold-400 hover:underline"
+              >
+                info@svd-clean.de
+              </a>
+            </div>
+          </div>
         </div>
-        <nav className="flex gap-6">
-          <Link href="/impressum" className="hover:text-slate-200">
-            Impressum
-          </Link>
-          <Link href="/datenschutz" className="hover:text-slate-200">
-            Datenschutz
-          </Link>
-          <Link href="/agb" className="hover:text-slate-200">
-            AGB
-          </Link>
-        </nav>
+
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.05] pt-8 sm:flex-row">
+          <div className="flex items-center gap-2.5">
+            <span className="grid size-7 place-items-center rounded-md bg-gold-400 font-mono text-xs font-bold text-navy-950">
+              S
+            </span>
+            <span className="text-sm text-white/45">
+              <span className="text-white/85 font-medium">SVD Clean Pro</span>
+              <span className="ml-1.5">· © {new Date().getFullYear()}</span>
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-white/40">
+            <span>Made in Augsburg 🇩🇪</span>
+            <span aria-hidden>·</span>
+            <span>DSGVO-konform</span>
+            <span aria-hidden>·</span>
+            <span>§19 UStG Support</span>
+          </div>
+        </div>
       </div>
     </footer>
   );
