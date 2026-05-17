@@ -6,6 +6,7 @@ import { ChevronRight, Play } from 'lucide-react';
 import { DotPattern } from '@/components/ui/magic/dot-pattern';
 import { Sparkles } from '@/components/ui/aceternity/sparkles';
 import { ShimmerButton } from '@/components/ui/magic/shimmer-button';
+import { MagneticWrap } from '@/components/ui/magnetic-button';
 import { easings } from '@/lib/design-tokens';
 
 export function HeroV2() {
@@ -103,14 +104,16 @@ export function HeroV2() {
           transition={{ duration: 0.8, delay: 0.5, ease: easings.smooth }}
           className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4"
         >
-          <Link href="/kalkulator" className="inline-flex">
-            <ShimmerButton className="group w-full justify-center sm:w-auto">
-              <span className="flex items-center gap-2">
-                Jetzt starten — €197
-                <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </ShimmerButton>
-          </Link>
+          <MagneticWrap strength={0.18}>
+            <Link href="/kalkulator" className="inline-flex">
+              <ShimmerButton className="group w-full justify-center sm:w-auto">
+                <span className="flex items-center gap-2">
+                  Jetzt starten — €197
+                  <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </ShimmerButton>
+            </Link>
+          </MagneticWrap>
 
           <Link
             href="/demo"
