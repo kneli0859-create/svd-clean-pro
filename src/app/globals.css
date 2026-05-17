@@ -189,6 +189,11 @@
   from { transform: translateX(0); }
   to   { transform: translateX(calc(-50% - 0.5rem)); }
 }
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 0.5rem)); }
+}
+.animate-scroll { animation: scroll var(--animation-duration, 40s) linear infinite; }
 
 .animate-float        { animation: float 4s var(--ease-smooth) infinite; }
 .animate-pulse-soft   { animation: pulse-soft 3s ease-in-out infinite; }
