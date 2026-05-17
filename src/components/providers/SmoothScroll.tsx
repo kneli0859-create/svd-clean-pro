@@ -13,7 +13,6 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
   const prefersReduced = useReducedMotion();
 
-  // Hook up Framer Motion <-> Lenis time so motion values track scroll
   useEffect(() => {
     if (prefersReduced) return;
     const lenis = lenisRef.current?.lenis;

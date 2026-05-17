@@ -21,9 +21,12 @@ export function HeroV2() {
       {/* Background layer 2 — premium gradient mesh */}
       <div className="bg-mesh-hero pointer-events-none absolute inset-0" />
 
-      {/* Background layer 3 — subtle sparkles */}
-      <div className="absolute inset-0 z-0">
+      {/* Background layer 3 — subtle sparkles (denser on desktop, lighter on mobile) */}
+      <div className="absolute inset-0 z-0 hidden sm:block">
         <Sparkles density={36} color="#FFD700" speed={0.35} opacity={0.45} />
+      </div>
+      <div className="absolute inset-0 z-0 sm:hidden">
+        <Sparkles density={14} color="#FFD700" speed={0.35} opacity={0.4} />
       </div>
 
       {/* Content */}
