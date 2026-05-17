@@ -12,13 +12,14 @@ import { Step4Result } from './Step4Result';
 import { isValidPLZ } from '@/lib/plz/germany-tiers';
 
 export function CalculatorWizard() {
-  const { step, next, prev, service, plz } = useCalculator((s) => ({
-    step: s.step,
-    next: s.next,
-    prev: s.prev,
-    service: s.service,
-    plz: s.plz,
-  }));
+  // Individual selectors: Zustand v5 uses Object.is equality, so returning a
+  // new object literal from the selector each render causes hydration loops in
+  // React 19. One value per useCalculator() call is the safe shape.
+  const step = useCalculator((s) => s.step);
+  const next = useCalculator((s) => s.next);
+  const prev = useCalculator((s) => s.prev);
+  const service = useCalculator((s) => s.service);
+  const plz = useCalculator((s) => s.plz);
 
   const canAdvance =
     (step === 0 && service !== null) ||

@@ -18,12 +18,10 @@ const frequencies: FrequencyKey[] = [
 ];
 
 export function Step2Details() {
-  const { service, quantity, frequency, set } = useCalculator((s) => ({
-    service: s.service,
-    quantity: s.quantity,
-    frequency: s.frequency,
-    set: s.set,
-  }));
+  const service = useCalculator((s) => s.service);
+  const quantity = useCalculator((s) => s.quantity);
+  const frequency = useCalculator((s) => s.frequency);
+  const set = useCalculator((s) => s.set);
 
   if (!service) return null;
   const svc = SERVICES[service];
