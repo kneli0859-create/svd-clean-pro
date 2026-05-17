@@ -8,26 +8,22 @@ import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const tierLabel = (tier: number) =>
-  (
-    {
-      1: 'Premium-Region',
-      2: 'Großstadt',
-      3: 'Mittlere Stadt',
-      4: 'Kleinere Stadt',
-      5: 'Ländliche Region',
-    } as Record<number, string>
-  )[tier] ?? 'Region';
+  ({
+    1: 'Premium-Region',
+    2: 'Großstadt',
+    3: 'Mittlere Stadt',
+    4: 'Kleinere Stadt',
+    5: 'Ländliche Region',
+  }[tier] ?? 'Region');
 
-const tierAccent = (tier: number) =>
-  (
-    {
-      1: 'border-gold-400/45 bg-gold-400/[0.07] text-gold-400',
-      2: 'border-amber-300/30 bg-amber-300/[0.05] text-amber-300',
-      3: 'border-emerald-300/25 bg-emerald-300/[0.05] text-emerald-300',
-      4: 'border-sky-300/25 bg-sky-300/[0.05] text-sky-300',
-      5: 'border-slate-300/20 bg-slate-300/[0.04] text-slate-300',
-    } as Record<number, string>
-  )[tier] ?? 'border-slate-300/20 bg-slate-300/[0.04] text-slate-300';
+const tierColor = (tier: number) =>
+  ({
+    1: 'text-[#FFD700] bg-[#FFD700]/15 border-[#FFD700]/30',
+    2: 'text-amber-300 bg-amber-300/10 border-amber-300/30',
+    3: 'text-emerald-300 bg-emerald-300/10 border-emerald-300/30',
+    4: 'text-sky-300 bg-sky-300/10 border-sky-300/30',
+    5: 'text-slate-300 bg-slate-300/10 border-slate-300/30',
+  }[tier] ?? 'text-slate-300 bg-slate-300/10');
 
 export function Step3Location() {
   const plz = useCalculator((s) => s.plz);
@@ -38,23 +34,20 @@ export function Step3Location() {
 
   return (
     <div>
-      <div className="mb-2 text-xs uppercase tracking-[0.2em] text-gold-400">
-        Schritt 3 von 4
-      </div>
-      <h2 className="text-h2 font-serif font-bold text-white">
+      <h2 className="font-serif text-3xl font-semibold sm:text-4xl">
         Standort & Steuern
       </h2>
-      <p className="mt-3 text-sm leading-relaxed text-white/55">
-        Die Postleitzahl bestimmt den regionalen Faktor (Tier 1–5).
+      <p className="mt-2 text-slate-400">
+        Postleitzahl bestimmt die regionale Preisanpassung.
       </p>
 
       <div className="mt-8 space-y-6">
         <div>
-          <Label htmlFor="plz" className="text-xs uppercase tracking-wider text-white/55">
+          <Label htmlFor="plz" className="text-sm font-medium text-slate-200">
             Postleitzahl
           </Label>
           <div className="relative mt-2">
-            <MapPin className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gold-400" />
+            <MapPin className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#FFD700]" />
             <Input
               id="plz"
               inputMode="numeric"
@@ -64,7 +57,7 @@ export function Step3Location() {
                 set('plz', e.target.value.replace(/\D/g, '').slice(0, 5))
               }
               placeholder="80331"
-              className="h-12 border-white/10 bg-white/[0.04] pl-9 font-mono text-lg text-white placeholder:text-white/30"
+              className="bg-white/[0.04] pl-9 font-mono text-lg text-slate-100"
             />
           </div>
           {plz.length > 0 && !valid && (
@@ -78,38 +71,36 @@ export function Step3Location() {
         <AnimatePresence>
           {tier && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-              className={`overflow-hidden rounded-2xl border p-5 ${tierAccent(tier.tier)}`}
+              exit={{ opacity: 0, y: -10 }}
+              className={`flex flex-col gap-2 rounded-2xl border p-5 ${tierColor(
+                tier.tier,
+              )}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase tracking-[0.18em]">
-                  {tierLabel(tier.tier)} · Tier {tier.tier}
+                <span className="text-xs uppercase tracking-[0.15em]">
+                  {tierLabel(tier.tier)} (Tier {tier.tier})
                 </span>
                 <span className="font-mono text-sm">
-                  Faktor x{tier.multiplier.toFixed(2)}
+                  Multiplikator x{tier.multiplier.toFixed(2)}
                 </span>
               </div>
-              <div className="mt-3 text-2xl font-semibold leading-tight text-white">
-                {tier.city}
-                <span className="ml-2 text-base font-normal text-white/55">
-                  · {tier.region}
-                </span>
-              </div>
+              <span className="text-lg font-semibold">
+                {tier.city}, {tier.region}
+              </span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
                 §19 UStG — Kleinunternehmer
-                <Info className="size-3.5 text-white/35" />
+                <Info className="size-3.5 text-slate-500" />
               </div>
-              <p className="mt-1 text-xs leading-relaxed text-white/45">
+              <p className="mt-1 text-xs text-slate-400">
                 Wenn aktiviert, wird keine 19% Mehrwertsteuer ausgewiesen.
                 Standard: deaktiviert (Regelbesteuerung).
               </p>
@@ -118,14 +109,14 @@ export function Step3Location() {
               type="button"
               onClick={() => set('isKleinunternehmer', !isK)}
               className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-                isK ? 'bg-gold-400' : 'bg-white/15'
+                isK ? 'bg-[#FFD700]' : 'bg-white/15'
               }`}
               aria-pressed={isK}
               aria-label="Kleinunternehmer §19 UStG"
             >
               <motion.span
                 layout
-                transition={{ type: 'spring', stiffness: 380, damping: 24 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                 className={`absolute top-1 size-5 rounded-full bg-white shadow ${
                   isK ? 'right-1' : 'left-1'
                 }`}

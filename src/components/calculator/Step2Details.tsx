@@ -8,6 +8,7 @@ import {
 } from '@/lib/plz/germany-tiers';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { motion } from 'framer-motion';
 
 const frequencies: FrequencyKey[] = [
   'einmalig',
@@ -30,48 +31,68 @@ export function Step2Details() {
   const min = svc.unit === 'm²' ? 20 : svc.unit === 'Stück' ? 1 : 1;
   const max = svc.unit === 'm²' ? 5000 : svc.unit === 'Stück' ? 50 : 40;
   const step = svc.unit === 'm²' ? 10 : 1;
+  const clamped = Math.min(max, Math.max(min, quantity));
+  const pct = ((clamped - min) / (max - min)) * 100;
 
   return (
     <div>
-      <h2 className="font-serif text-3xl font-semibold sm:text-4xl">
+      <div className="mb-2 text-xs uppercase tracking-[0.2em] text-gold-400">
+        Schritt 2 von 4
+      </div>
+      <h2 className="text-h2 font-serif font-bold text-white">
         Details zu Ihrer Reinigung
       </h2>
-      <p className="mt-2 text-slate-400">
-        {svc.name} — geben Sie Umfang und Frequenz an.
+      <p className="mt-3 text-sm leading-relaxed text-white/55">
+        {svc.name} — geben Sie Umfang und Frequenz an. Echtzeit-Berechnung.
       </p>
 
-      <div className="mt-8 space-y-8">
+      <div className="mt-10 space-y-10">
+        {/* Quantity slider with big number */}
         <div>
           <div className="flex items-baseline justify-between">
-            <Label className="text-sm font-medium text-slate-200">
+            <Label className="text-xs uppercase tracking-wider text-white/55">
               Umfang ({unitLabel})
             </Label>
-            <span className="font-mono text-2xl font-semibold text-[#FFD700]">
-              {quantity}
-              <span className="ml-1 text-base text-slate-400">{svc.unit}</span>
-            </span>
+            <div>
+              <motion.span
+                key={quantity}
+                initial={{ scale: 0.9, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.18 }}
+                className="font-mono text-3xl font-bold text-gold-400 sm:text-4xl"
+              >
+                {quantity}
+              </motion.span>
+              <span className="ml-1 text-base text-white/40">{svc.unit}</span>
+            </div>
           </div>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={Math.min(max, Math.max(min, quantity))}
-            onChange={(e) => set('quantity', Number(e.target.value))}
-            className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-[#FFD700]"
-          />
-          <div className="mt-1 flex justify-between font-mono text-xs text-slate-500">
-            <span>
-              {min} {svc.unit}
-            </span>
-            <span>
-              {max} {svc.unit}
-            </span>
+
+          {/* Premium slider with gold-filled track */}
+          <div className="mt-4 relative h-2 rounded-full bg-white/[0.06]">
+            <div
+              className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-gold-400 to-gold-500"
+              style={{ width: `${pct}%` }}
+            />
+            <input
+              type="range"
+              min={min}
+              max={max}
+              step={step}
+              value={clamped}
+              onChange={(e) => set('quantity', Number(e.target.value))}
+              className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gold-400 [&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(255,215,0,0.18),0_4px_16px_rgba(255,215,0,0.45)] [&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-gold-400"
+              aria-label={`Umfang in ${svc.unit}`}
+            />
+          </div>
+          <div className="mt-2 flex justify-between font-mono text-[10px] text-white/35">
+            <span>{min} {svc.unit}</span>
+            <span>{max} {svc.unit}</span>
           </div>
         </div>
 
+        {/* Frequency pills */}
         <div>
-          <Label className="text-sm font-medium text-slate-200">
+          <Label className="text-xs uppercase tracking-wider text-white/55">
             Wie oft soll gereinigt werden?
           </Label>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
@@ -82,10 +103,10 @@ export function Step2Details() {
                   key={f}
                   type="button"
                   onClick={() => set('frequency', f)}
-                  className={`rounded-xl px-3 py-3 text-sm font-medium transition-all ${
+                  className={`relative h-11 rounded-xl px-3 text-sm font-medium transition-all ${
                     active
-                      ? 'bg-[#FFD700] text-[#0F172A]'
-                      : 'bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'
+                      ? 'bg-gold-400 text-navy-950 shadow-[0_8px_24px_-8px_rgba(255,215,0,0.55)]'
+                      : 'bg-white/[0.04] text-white/70 hover:bg-white/[0.08]'
                   }`}
                 >
                   {FREQUENCY_LABELS[f]}
@@ -95,6 +116,7 @@ export function Step2Details() {
           </div>
         </div>
 
+        {/* Customer name/email */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NameField />
           <EmailField />
@@ -109,15 +131,15 @@ function NameField() {
   const set = useCalculator((s) => s.set);
   return (
     <div>
-      <Label htmlFor="cname" className="text-sm font-medium text-slate-200">
-        Ihr Name
+      <Label htmlFor="cname" className="text-xs uppercase tracking-wider text-white/55">
+        Ihr Name (optional)
       </Label>
       <Input
         id="cname"
         value={customerName}
         onChange={(e) => set('customerName', e.target.value)}
         placeholder="Max Mustermann"
-        className="mt-2 bg-white/[0.04] text-slate-100"
+        className="mt-2 h-11 border-white/10 bg-white/[0.04] text-white placeholder:text-white/30"
       />
     </div>
   );
@@ -128,8 +150,8 @@ function EmailField() {
   const set = useCalculator((s) => s.set);
   return (
     <div>
-      <Label htmlFor="cmail" className="text-sm font-medium text-slate-200">
-        E-Mail
+      <Label htmlFor="cmail" className="text-xs uppercase tracking-wider text-white/55">
+        E-Mail (optional)
       </Label>
       <Input
         id="cmail"
@@ -137,7 +159,7 @@ function EmailField() {
         value={customerEmail}
         onChange={(e) => set('customerEmail', e.target.value)}
         placeholder="ihre@email.de"
-        className="mt-2 bg-white/[0.04] text-slate-100"
+        className="mt-2 h-11 border-white/10 bg-white/[0.04] text-white placeholder:text-white/30"
       />
     </div>
   );

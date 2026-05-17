@@ -2,7 +2,13 @@
 
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Calendar, ArrowDownRight, ArrowDown, Sparkles } from 'lucide-react';
+import {
+  Download,
+  Calendar,
+  ArrowDownRight,
+  Sparkles,
+  ArrowRight,
+} from 'lucide-react';
 import { useCalculator } from '@/lib/calculator-store';
 import {
   SERVICES,
@@ -13,9 +19,10 @@ import {
   formatEUR,
   formatEURPrecise,
 } from '@/lib/plz/germany-tiers';
-import { CountUp } from './CountUp';
+import { NumberTicker } from '@/components/ui/magic/number-ticker';
 import { LinkButton } from '@/components/ui/link-button';
 import { Button } from '@/components/ui/button';
+import { easings } from '@/lib/design-tokens';
 
 export function Step4Result() {
   const state = useCalculator((s) => s);
@@ -32,11 +39,7 @@ export function Step4Result() {
   }, [state.service, state.quantity, state.plz, state.frequency, state.isKleinunternehmer]);
 
   if (!state.service || !breakdown) {
-    return (
-      <p className="text-slate-400">
-        Bitte alle vorherigen Schritte abschließen.
-      </p>
-    );
+    return <p className="text-sm text-white/55">Bitte alle vorherigen Schritte abschließen.</p>;
   }
 
   const svc = SERVICES[state.service];
@@ -45,75 +48,95 @@ export function Step4Result() {
 
   return (
     <div>
-      <div className="flex items-center gap-2">
-        <Sparkles className="size-4 text-[#FFD700]" />
-        <span className="text-xs uppercase tracking-[0.2em] text-[#FFD700]">
+      {/* Eyebrow */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center gap-2"
+      >
+        <Sparkles className="size-4 text-gold-400" />
+        <span className="text-xs uppercase tracking-[0.2em] text-gold-400">
           Ihre Berechnung
         </span>
-      </div>
-      <h2 className="mt-2 font-serif text-3xl font-semibold sm:text-4xl">
-        Angebot für {svc.name}
-      </h2>
-      <p className="mt-2 text-slate-400">
-        {state.quantity} {svc.unit} • {FREQUENCY_LABELS[state.frequency]} • {tier.city} (Tier {tier.tier})
-      </p>
+      </motion.div>
 
-      {/* Big price comparison */}
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <PriceCard
+      {/* Dramatic price reveal */}
+      <motion.div
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.9, ease: easings.spring, delay: 0.1 }}
+        className="mt-8 text-center"
+      >
+        <p className="mb-3 text-[11px] uppercase tracking-[0.25em] text-white/40">
+          Ihr Preis · {svc.name}
+        </p>
+        <div className="font-mono font-bold leading-none">
+          <span className="bg-gradient-to-b from-gold-400 to-gold-600 bg-clip-text text-[clamp(4rem,15vw,9rem)] text-transparent">
+            <NumberTicker value={Math.round(breakdown.brutto)} duration={1.4} />
+          </span>
+          <span className="ml-2 text-3xl text-white/40 sm:text-4xl">€</span>
+        </div>
+        <p className="mt-3 text-[11px] tracking-wide text-white/40">
+          {state.quantity} {svc.unit} · {FREQUENCY_LABELS[state.frequency]} ·{' '}
+          {tier.city} (Tier {tier.tier})
+        </p>
+      </motion.div>
+
+      {/* Comparison cards */}
+      <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <CompareCard
           label="Konkurrenz"
           sub="Markt-Durchschnitt"
           value={savings.konkurrenz}
           tone="strike"
+          delay={0.2}
         />
-        <PriceCard
+        <CompareCard
           label="Empfohlen"
           sub="Branchenpreis"
           value={savings.empfohlen}
           tone="muted"
+          delay={0.3}
         />
-        <PriceCard
+        <CompareCard
           label="Ihr Preis"
           sub="mit SVD Clean Pro"
           value={savings.ihrPreis}
           tone="gold"
-          highlight
+          delay={0.4}
         />
       </div>
 
-      {/* Savings banner */}
+      {/* Savings callout */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 flex items-center justify-between rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4"
+        transition={{ delay: 0.55 }}
+        className="mt-8 flex flex-col items-center"
       >
-        <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-full bg-emerald-500/20 text-emerald-300">
-            <ArrowDownRight className="size-5" />
+        <div className="inline-flex items-center gap-3 rounded-full border border-success/25 bg-success/10 px-5 py-2.5">
+          <ArrowDownRight className="size-4 text-success" />
+          <span className="text-sm font-medium text-success">
+            Sie sparen{' '}
+            <NumberTicker value={savings.sieSparen} format={formatEUR} duration={1.3} />{' '}
+            <span className="ml-1 font-mono text-xs text-success/70">
+              (−{savings.sparenProzent}%) gegenüber Konkurrenz
+            </span>
           </span>
-          <div>
-            <div className="text-sm font-semibold text-emerald-200">
-              Sie sparen
-            </div>
-            <div className="text-xs text-emerald-200/80">
-              gegenüber Marktpreis
-            </div>
-          </div>
-        </div>
-        <div className="text-right">
-          <div className="font-mono text-2xl font-bold text-emerald-200">
-            <CountUp value={savings.sieSparen} format={formatEUR} duration={1.2} />
-          </div>
-          <div className="font-mono text-xs text-emerald-200/80">
-            −{savings.sparenProzent}%
-          </div>
         </div>
       </motion.div>
 
-      {/* Itemized */}
-      <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-        <h3 className="font-serif text-lg font-semibold">Aufschlüsselung</h3>
+      {/* Itemized breakdown */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.65 }}
+        className="mt-10 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6"
+      >
+        <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">
+          Aufschlüsselung
+        </h3>
         <dl className="mt-4 space-y-2 text-sm">
           <Row
             label={`${svc.name} (${state.quantity} ${svc.unit})`}
@@ -132,108 +155,101 @@ export function Step4Result() {
           <Separator />
           <Row label="Netto" value={formatEURPrecise(breakdown.netto)} bold />
           {breakdown.isKleinunternehmer ? (
-            <Row
-              label="MwSt (§19 UStG – Kleinunternehmer)"
-              value="—"
-              muted
-            />
+            <Row label="MwSt (§19 UStG)" value="—" muted />
           ) : (
-            <Row
-              label="MwSt 19%"
-              value={formatEURPrecise(breakdown.mwst)}
-            />
+            <Row label="MwSt 19%" value={formatEURPrecise(breakdown.mwst)} />
           )}
           <Separator />
           <Row
             label="Gesamtsumme"
             value={
-              <span className="font-mono text-2xl font-bold text-[#FFD700]">
-                <CountUp value={breakdown.brutto} format={formatEURPrecise} duration={1} />
+              <span className="font-mono text-xl font-bold text-gold-400">
+                <NumberTicker value={breakdown.brutto} format={formatEURPrecise} duration={1} />
               </span>
             }
             bold
           />
         </dl>
         {breakdown.isKleinunternehmer && (
-          <p className="mt-4 text-xs text-slate-400">
-            Hinweis: Gemäß §19 UStG wird keine Umsatzsteuer berechnet.
+          <p className="mt-3 text-[11px] text-white/40">
+            Hinweis: Gemäß §19 UStG (Kleinunternehmerregelung) wird keine Umsatzsteuer ausgewiesen.
           </p>
         )}
-      </div>
+      </motion.div>
 
       {/* CTAs */}
-      <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.75 }}
+        className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2"
+      >
         <LinkButton
           href={`/api/offer/pdf?service=${state.service}&qty=${state.quantity}&plz=${state.plz}&freq=${state.frequency}&kun=${state.isKleinunternehmer ? '1' : '0'}&name=${encodeURIComponent(state.customerName)}&email=${encodeURIComponent(state.customerEmail)}`}
           size="lg"
-          className="h-12 rounded-full bg-[#FFD700] font-semibold text-[#0F172A] hover:bg-[#FFC700]"
+          className="h-12 rounded-full bg-gold-400 px-6 font-semibold text-navy-950 hover:bg-gold-500"
         >
           <Download className="mr-2 size-4" />
-          PDF-Angebot herunterladen
+          PDF-Angebot
         </LinkButton>
         <Button
           size="lg"
           variant="outline"
-          className="h-12 rounded-full border-white/15 bg-white/[0.02] font-medium text-slate-100 hover:bg-white/[0.06]"
+          className="h-12 rounded-full border-white/15 bg-white/[0.04] font-medium text-white hover:bg-white/[0.08]"
           render={(p) => (
             <a {...p} href="/booking">
               <Calendar className="mr-2 size-4" />
               Termin online buchen
+              <ArrowRight className="ml-2 size-4" />
             </a>
           )}
         />
-      </div>
-
-      <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-500">
-        <ArrowDown className="size-3" />
-        <span>Druckbares PDF + Online-Buchungslink in einem Klick</span>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-function PriceCard({
+function CompareCard({
   label,
   sub,
   value,
   tone,
-  highlight,
+  delay = 0,
 }: {
   label: string;
   sub: string;
   value: number;
   tone: 'strike' | 'muted' | 'gold';
-  highlight?: boolean;
+  delay?: number;
 }) {
-  const fmt = formatEUR(value);
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: tone === 'gold' ? 0.2 : tone === 'muted' ? 0.1 : 0 }}
+      transition={{ delay, duration: 0.5, ease: easings.smooth }}
       className={`rounded-2xl border p-5 ${
-        highlight
-          ? 'border-[#FFD700]/40 bg-[#FFD700]/10 ring-1 ring-[#FFD700]/20'
-          : 'border-white/10 bg-white/[0.02]'
+        tone === 'gold'
+          ? 'border-gold-400/40 bg-gradient-to-b from-gold-400/[0.10] to-gold-400/[0.03] ring-1 ring-gold-400/15'
+          : 'border-white/[0.07] bg-white/[0.02]'
       }`}
     >
-      <div className="text-xs uppercase tracking-wider text-slate-400">{label}</div>
+      <div className="text-[10px] uppercase tracking-[0.2em] text-white/45">{label}</div>
       <div
         className={`mt-2 font-mono text-3xl font-bold ${
           tone === 'strike'
             ? 'text-red-400 line-through decoration-red-500/60'
             : tone === 'muted'
-            ? 'text-slate-300'
-            : 'text-[#FFD700]'
+            ? 'text-white/70'
+            : 'text-gold-400'
         }`}
       >
         {tone === 'gold' ? (
-          <CountUp value={value} format={formatEUR} duration={1.2} />
+          <NumberTicker value={value} format={formatEUR} duration={1.2} />
         ) : (
-          fmt
+          formatEUR(value)
         )}
       </div>
-      <div className="mt-1 text-xs text-slate-500">{sub}</div>
+      <div className="mt-1 text-[11px] text-white/40">{sub}</div>
     </motion.div>
   );
 }
@@ -254,15 +270,11 @@ function Row({
   return (
     <div
       className={`flex items-baseline justify-between ${
-        bold ? 'text-slate-100' : muted ? 'text-slate-500' : 'text-slate-300'
+        bold ? 'text-white' : muted ? 'text-white/45' : 'text-white/70'
       }`}
     >
       <dt>{label}</dt>
-      <dd
-        className={`${bold ? 'font-semibold' : ''} ${mono ? 'font-mono' : ''}`}
-      >
-        {value}
-      </dd>
+      <dd className={`${bold ? 'font-semibold' : ''} ${mono ? 'font-mono' : ''}`}>{value}</dd>
     </div>
   );
 }
