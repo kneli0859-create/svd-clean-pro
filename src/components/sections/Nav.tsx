@@ -17,31 +17,35 @@ export function Nav() {
       transition={{ duration: 0.5 }}
       className={`fixed inset-x-0 top-0 z-50 transition-all ${
         scrolled
-          ? 'border-b border-white/10 bg-[#0F172A]/85 backdrop-blur-xl'
+          ? 'border-b border-white/10 bg-navy-950/80 backdrop-blur-xl'
           : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-lg bg-[#FFD700] font-mono text-sm font-bold text-[#0F172A]">
+        <Link
+          href="/"
+          aria-label="SVD Clean Pro — Startseite"
+          className="-mx-2 inline-flex min-h-[44px] items-center gap-2 rounded-lg px-2"
+        >
+          <span className="grid size-8 place-items-center rounded-lg bg-gold-400 font-mono text-sm font-bold text-navy-950">
             S
           </span>
-          <span className="font-serif text-lg font-semibold tracking-tight">
-            SVD <span className="text-[#FFD700]">Clean Pro</span>
+          <span className="font-serif text-lg font-semibold tracking-tight text-white">
+            SVD <span className="text-gold-400">Clean Pro</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-          <Link href="/#story" className="hover:text-slate-100">
+        <nav className="hidden items-center gap-1 text-sm text-white/70 md:flex">
+          <Link href="/#story" className="rounded-md px-3 py-2 hover:bg-white/[0.04] hover:text-white">
             So funktioniert&apos;s
           </Link>
-          <Link href="/kalkulator" className="hover:text-slate-100">
+          <Link href="/kalkulator" className="rounded-md px-3 py-2 hover:bg-white/[0.04] hover:text-white">
             Kalkulator
           </Link>
-          <Link href="/#pricing" className="hover:text-slate-100">
+          <Link href="/#pricing" className="rounded-md px-3 py-2 hover:bg-white/[0.04] hover:text-white">
             Preise
           </Link>
-          <Link href="/demo" className="hover:text-slate-100">
+          <Link href="/demo" className="rounded-md px-3 py-2 hover:bg-white/[0.04] hover:text-white">
             Demo
           </Link>
         </nav>
@@ -49,7 +53,7 @@ export function Nav() {
         <LinkButton
           href="/kalkulator"
           size="sm"
-          className="h-9 rounded-full bg-[#FFD700] px-4 text-sm font-semibold text-[#0F172A] hover:bg-[#FFC700]"
+          className="h-10 rounded-full bg-gold-400 px-4 text-sm font-semibold text-navy-950 hover:bg-gold-500"
         >
           Jetzt starten
         </LinkButton>

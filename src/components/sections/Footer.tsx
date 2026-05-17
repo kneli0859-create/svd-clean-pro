@@ -39,12 +39,12 @@ export function Footer() {
               <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">
                 {col.heading}
               </h4>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-4 space-y-0.5">
                 {col.links.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-sm text-white/65 transition-colors hover:text-white"
+                      className="-mx-2 inline-flex min-h-[44px] items-center rounded-md px-2 text-sm text-white/65 transition-colors hover:bg-white/[0.03] hover:text-white"
                     >
                       {l.label}
                     </Link>
@@ -63,7 +63,7 @@ export function Footer() {
               <div className="mt-1">Augsburg, Deutschland</div>
               <a
                 href="mailto:info@svd-clean.de"
-                className="mt-2 inline-block text-gold-400 hover:underline"
+                className="-mx-2 mt-1 inline-flex min-h-[44px] items-center rounded-md px-2 text-gold-400 hover:underline"
               >
                 info@svd-clean.de
               </a>
