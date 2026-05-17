@@ -40,7 +40,7 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#0F172A] text-[#F8FAFC] font-sans">
+      <body className="min-h-full flex flex-col bg-navy-950 text-[#F8FAFC] font-sans">
         {children}
         <Toaster richColors position="top-right" theme="dark" />
       </body>

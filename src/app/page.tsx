@@ -1,17 +1,15 @@
-import Hero3D from '@/components/hero/Hero3D';
+import { HeroV2 } from '@/components/hero/HeroV2';
 import { Nav } from '@/components/sections/Nav';
 import { StorySection } from '@/components/sections/StorySection';
 import { PricingSection } from '@/components/sections/PricingSection';
 import { Footer } from '@/components/sections/Footer';
-import { SmoothScroll } from '@/components/SmoothScroll';
 
 export default function HomePage() {
   return (
     <>
-      <SmoothScroll />
       <Nav />
       <main className="flex-1">
-        <Hero3D />
+        <HeroV2 />
         <div id="story">
           <StorySection />
         </div>
