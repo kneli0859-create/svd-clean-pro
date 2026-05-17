@@ -1,7 +1,6 @@
 import { CalculatorWizard } from '@/components/calculator/CalculatorWizard';
 import { Nav } from '@/components/sections/Nav';
 import { Footer } from '@/components/sections/Footer';
-import { SmoothScroll } from '@/components/SmoothScroll';
 
 export const metadata = {
   title: 'Kalkulator — SVD Clean Pro',
@@ -11,7 +10,6 @@ export const metadata = {
 export default function KalkulatorPage() {
   return (
     <>
-      <SmoothScroll />
       <Nav />
       <main className="flex-1 bg-spotlight bg-grid pt-24 pb-16">
         <div className="mx-auto max-w-4xl px-6 pb-12 pt-6 text-center">

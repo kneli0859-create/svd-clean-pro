@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
+import { SmoothScroll } from '@/components/providers/SmoothScroll';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -41,7 +42,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-navy-950 text-[#F8FAFC] font-sans">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
         <Toaster richColors position="top-right" theme="dark" />
       </body>
     </html>

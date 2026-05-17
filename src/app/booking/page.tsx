@@ -1,7 +1,6 @@
 import { BookingForm } from '@/components/booking/BookingForm';
 import { Nav } from '@/components/sections/Nav';
 import { Footer } from '@/components/sections/Footer';
-import { SmoothScroll } from '@/components/SmoothScroll';
 
 export const metadata = {
   title: 'Termin buchen — SVD Clean Pro',
@@ -11,7 +10,6 @@ export const metadata = {
 export default function BookingPage() {
   return (
     <>
-      <SmoothScroll />
       <Nav />
       <main className="flex-1 bg-spotlight bg-grid pt-24 pb-16">
         <div className="mx-auto max-w-3xl px-6 pt-6 pb-10 text-center">
